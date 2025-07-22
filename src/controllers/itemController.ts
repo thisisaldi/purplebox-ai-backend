@@ -16,3 +16,13 @@ export const createItem = async (req: Request, res: Response) => {
     res.status(500).send("Server error");
   }
 };
+
+export const getItems = async (req: Request, res: Response) => {
+  try {
+    const items = await Item.find();
+    res.json(items);
+  } catch (err) {
+    console.log("Get Items : " + err);
+    res.status(500).send("Server error");
+  }
+};
