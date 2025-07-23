@@ -10,7 +10,10 @@ export const createItem = async (req: Request, res: Response) => {
     });
 
     const savedItem = await newItem.save();
-    res.status(201).json(savedItem);
+    res.status(201).json({
+      message: "Success",
+      item: savedItem
+    });
   } catch (err) {
     console.error("Create Item Error: ", err);
     res.status(500).send("Server error");
@@ -19,7 +22,7 @@ export const createItem = async (req: Request, res: Response) => {
 
 export const getItems = async (req: Request, res: Response) => {
   try {
-    const items = await Item.find();
+    const items = await Item.find().select("_id name description");
     res.json(items);
   } catch (err) {
     console.log("Get Items Error : " + err);
@@ -47,7 +50,11 @@ export const updateItem = async (req: Request, res: Response) => {
     item.description = description || item.description;
 
     await item.save();
-    res.json(item);
+    res.json({
+      message: "Success",
+      item
+    }
+    );
   } catch (err) {
     res.status(500).send("Server error");
   }
