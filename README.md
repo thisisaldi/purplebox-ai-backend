@@ -96,7 +96,6 @@ Example:
 GET /items?page=2&limit=5
 ```
 
---
 
 ## Sample Request/Response
 
