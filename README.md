@@ -76,12 +76,14 @@ Server will start at: `http://localhost:8000`
 
 | Method | Endpoint         | Description                          |
 |--------|------------------|--------------------------------------|
-| POST   | `/items`         | Create a new item        |
+| POST   | `/items`         | Create a new item (Protected)       |
 | GET    | `/items`         | Get all items with pagination        |
 | GET    | `/items/:id`     | Get a single item by ID              |
-| PUT    | `/items/:id`     | Update an item           |
-| DELETE | `/items/:id`     | Delete an item           |
+| PUT    | `/items/:id`     | Update an item (Owner only)          |
+| DELETE | `/items/:id`     | Delete an item (Owner only)          |
 
+> Protected routes require user to be authenticated with JWT.  
+> Only the item’s owner can update or delete their item.
 ---
 
 ### Pagination (for `/items`)
@@ -133,21 +135,29 @@ POST /items
 ### Retrieve Items Example Response
 
 ```
-GET /items?page=1&limit=5
+GET /items?page=1&limit=4
 {
     "page": 1,
-    "totalItems": 18,
+    "totalItems": 15,
     "totalPages": 4,
     "items": [
         {
-            "_id": "68805...",
-            "name": "Book 3",
-            "description": "A book 3."
+            "_id": "68807...",
+            "name": "Jane Book 2",
+            "description": "Jane's book 2",
+            "owner": {
+                "_id": "68806...",
+                "name": "Jane"
+            }
         },
         {
-            "_id": "68805...",
-            "name": "Book 4",
-            "description": "A book 4."
+            "_id": "68807...",
+            "name": "Jane Book 4",
+            "description": "Jane's book 4",
+            "owner": {
+                "_id": "68806...",
+                "name": "Jane"
+            }
         },
         ...
     ]
