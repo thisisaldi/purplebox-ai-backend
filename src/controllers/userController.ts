@@ -6,10 +6,10 @@ export const getUserProfile = async (req: AuthRequest, res: Response) => {
   try {
     const user = await User.findById(req.user?.id).select("_id name email");
 
-    if (!user) return res.status(404).json({ msg: "User not found" });
+    if (!user) return res.status(404).json({ message: "User not found" });
 
     res.json(user);
   } catch (err) {
-    res.status(500).send("Server error");
+    res.status(500).send({ message: "Server error" });
   }
 };

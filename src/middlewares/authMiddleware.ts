@@ -17,7 +17,7 @@ export const checkAuth = async (
       req.cookies.token || req.header("Authorization")?.replace("Bearer ", "");
 
     if (!token) {
-      return res.status(401).json({ msg: "No token, authorization denied" });
+      return res.status(401).json({ message: "No token, authorization denied" });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
@@ -26,12 +26,12 @@ export const checkAuth = async (
 
     const user = await User.findById(decoded.user.id).select("-password");
     if (!user) {
-      return res.status(401).json({ msg: "User not found" });
+      return res.status(401).json({ message: "User not found" });
     }
 
     req.user = user;
     next();
   } catch (err) {
-    return res.status(401).json({ msg: "Token is not valid" });
+    return res.status(401).json({ message: "Token is not valid" });
   }
 };

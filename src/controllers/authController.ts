@@ -6,7 +6,7 @@ export const registerUser = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
   try {
     let user = await User.findOne({ email });
-    if (user) return res.status(400).json({ msg: "User already exists" });
+    if (user) return res.status(400).json({ message: "User already exists" });
 
     user = new User({ name, email, password });
     await user.save();
@@ -18,7 +18,9 @@ export const registerUser = async (req: Request, res: Response) => {
     });
   } catch (err) {
     console.log("Register: " + err);
-    res.status(500).send("Server error");
+    res.status(500).send({
+      message: "Server error",
+    });
   }
 };
 
@@ -29,13 +31,13 @@ export const loginUser = async (req: Request, res: Response) => {
     if (!user)
       return res
         .status(400)
-        .json({ msg: "Invalid credentials: email not found." });
+        .json({ message: "Invalid credentials: email not found" });
 
     const isMatch = await user.comparePassword(password);
     if (!isMatch)
       return res
         .status(400)
-        .json({ msg: "Invalid credentials: wrong password." });
+        .json({ message: "Invalid credentials: wrong password" });
 
     const token = generateToken(user.id);
     res.cookie("token", token, { httpOnly: true });
@@ -44,11 +46,13 @@ export const loginUser = async (req: Request, res: Response) => {
     });
   } catch (err) {
     console.log("Login: " + err);
-    res.status(500).send("Server error");
+    res.status(500).send({
+      message: "Server error",
+    });
   }
 };
 
 export const logoutUser = (req: Request, res: Response) => {
   res.clearCookie("token");
-  res.json({ msg: "Logged out" });
+  res.json({ message: "Logged out" });
 };

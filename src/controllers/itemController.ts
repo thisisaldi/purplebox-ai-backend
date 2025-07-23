@@ -15,8 +15,7 @@ export const createItem = async (req: Request, res: Response) => {
       item: savedItem,
     });
   } catch (err) {
-    console.error("Create Item Error: ", err);
-    res.status(500).send("Server error");
+    res.status(500).send({ message: "Server Error" });
   }
 };
 
@@ -42,15 +41,16 @@ export const getItems = async (req: Request, res: Response) => {
       items,
     });
   } catch (err) {
-    console.error("Get Items Error:", err);
-    res.status(500).json({ msg: "Server error" });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
 export const getItemById = async (req: Request, res: Response) => {
   try {
-    const item = await Item.findById(req.params.id).select("_id name description");
-    if (!item) return res.status(404).json({ msg: "Item not found" });
+    const item = await Item.findById(req.params.id).select(
+      "_id name description"
+    );
+    if (!item) return res.status(404).json({ message: "Item not found" });
     res.json(item);
   } catch (err) {
     res.status(500).send("Server error");
@@ -61,7 +61,7 @@ export const updateItem = async (req: Request, res: Response) => {
   const { name, description } = req.body;
   try {
     const item = await Item.findById(req.params.id);
-    if (!item) return res.status(404).json({ msg: "Item not found" });
+    if (!item) return res.status(404).json({ message: "Item not found" });
 
     item.name = name || item.name;
     item.description = description || item.description;
@@ -72,7 +72,7 @@ export const updateItem = async (req: Request, res: Response) => {
       item,
     });
   } catch (err) {
-    res.status(500).send("Server error");
+    res.status(500).send({ message: "Server error" });
   }
 };
 
@@ -80,14 +80,12 @@ export const deleteItem = async (req: Request, res: Response) => {
   try {
     const item = await Item.findById(req.params.id);
     if (!item) {
-      return res.status(404).json({ msg: "Item not found" });
+      return res.status(404).json({ message: "Item not found" });
     }
 
     await Item.findByIdAndDelete(req.params.id);
-    res.json({ msg: "Item deleted successfully" });
+    res.json({ message: "Item deleted successfully" });
   } catch (err: unknown) {
-    const error = err as Error;
-    console.error("Delete Item Error:", error.message);
-    res.status(500).send("Server error");
+    res.status(500).send({ message: "Server error" });
   }
 };
