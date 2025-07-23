@@ -1,12 +1,14 @@
 import { Request, Response } from "express";
 import { Item } from "../models/Items";
+import { AuthRequest } from "../types/authRequest";
 
-export const createItem = async (req: Request, res: Response) => {
+export const createItem = async (req: AuthRequest, res: Response) => {
   const { name, description } = req.body;
   try {
     const newItem = new Item({
       name,
       description,
+      owner: req.user?.id,
     });
 
     const savedItem = await newItem.save();
@@ -29,7 +31,8 @@ export const getItems = async (req: Request, res: Response) => {
     const totalPages = Math.ceil(totalItems / limit);
 
     const items = await Item.find()
-      .select("_id name description")
+      .select("_id name description owner")
+      .populate("owner", "_id name")
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 });
@@ -47,9 +50,9 @@ export const getItems = async (req: Request, res: Response) => {
 
 export const getItemById = async (req: Request, res: Response) => {
   try {
-    const item = await Item.findById(req.params.id).select(
-      "_id name description"
-    );
+    const item = await Item.findById(req.params.id)
+      .select("_id name description owner")
+      .populate("owner", "_id name");
     if (!item) return res.status(404).json({ message: "Item not found" });
     res.json(item);
   } catch (err) {
@@ -57,12 +60,14 @@ export const getItemById = async (req: Request, res: Response) => {
   }
 };
 
-export const updateItem = async (req: Request, res: Response) => {
+export const updateItem = async (req: AuthRequest, res: Response) => {
   const { name, description } = req.body;
   try {
     const item = await Item.findById(req.params.id);
     if (!item) return res.status(404).json({ message: "Item not found" });
-
+    if (item.owner.toString() !== req.user?.id) {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
     item.name = name || item.name;
     item.description = description || item.description;
 
@@ -76,11 +81,12 @@ export const updateItem = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteItem = async (req: Request, res: Response) => {
+export const deleteItem = async (req: AuthRequest, res: Response) => {
   try {
     const item = await Item.findById(req.params.id);
-    if (!item) {
-      return res.status(404).json({ message: "Item not found" });
+    if (!item) return res.status(404).json({ message: "Item not found" });
+    if (item.owner.toString() !== req.user?.id) {
+      return res.status(403).json({ message: "Unauthorized" });
     }
 
     await Item.findByIdAndDelete(req.params.id);

@@ -8,10 +8,11 @@ import {
 import express, { Request, Response } from "express";
 import { itemValidation } from "../utils/itemValidator";
 import { validationResult } from "express-validator";
+import { checkAuth } from "../middlewares/authMiddleware";
 
 export const itemRouter = express.Router();
 
-itemRouter.post("/", itemValidation, (req: Request, res: Response) => {
+itemRouter.post("/", checkAuth, itemValidation, (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({
@@ -23,5 +24,5 @@ itemRouter.post("/", itemValidation, (req: Request, res: Response) => {
 });
 itemRouter.get("/", getItems);
 itemRouter.get("/:id", getItemById);
-itemRouter.put("/:id", updateItem);
-itemRouter.delete("/:id", deleteItem);
+itemRouter.put("/:id", checkAuth, updateItem);
+itemRouter.delete("/:id", checkAuth, deleteItem);
