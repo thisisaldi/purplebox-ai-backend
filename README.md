@@ -27,8 +27,8 @@ Postman to test the APIs:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/your-repo-name.git
-cd your-repo-name
+git clone https://github.com/thisisaldi/purplebox-ai-backend.git
+cd purplebox-ai-backend
 ```
 
 ### 2. Install Dependencies
@@ -169,6 +169,8 @@ All API endpoints can be tested using **Postman**.
 
 You can view and import the Postman Collection from the following link:  
 [Postman Workspace – Purplebox AI Backend](https://www.postman.com/grey-zodiac-484010/workspace/purplebox-ai-backend)
+
+[Use this for `.env`](https://drive.google.com/file/d/1BFOORuMDHb3D5Ey0zpBUhAL20zoFkqsV/view?usp=sharing)
 
 > Make sure to configure the environment accordingly.
 
