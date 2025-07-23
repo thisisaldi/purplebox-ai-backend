@@ -102,7 +102,7 @@ GET /items?page=2&limit=5
 
 ### Register
 
-```json
+```
 POST /auth/register
 {
   "name": "Jane Doe",
@@ -113,7 +113,7 @@ POST /auth/register
 
 ### Login
 
-```json
+```
 POST /auth/login
 {
   "email": "jane@example.com",
@@ -123,7 +123,7 @@ POST /auth/login
 
 ### Create Item
 
-```json
+```
 POST /items
 {
   "name": "Pen",
@@ -133,7 +133,7 @@ POST /items
 
 ### Retrieve Items Example Response
 
-```json
+```
 GET /items?page=1&limit=5
 {
     "page": 1,
