@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response } from "express";
-import { loginUser, registerUser } from "../controllers/authController";
+import { loginUser, logoutUser, registerUser } from "../controllers/authController";
 import { registerValidation } from "../utils/authValidator";
 import { validationResult } from "express-validator";
 
@@ -14,4 +14,5 @@ authRouter.post("/register", registerValidation, (req: Request, res: Response) =
 });
 
 authRouter.post("/login", loginUser);
+authRouter.post("/logout", logoutUser);
 
